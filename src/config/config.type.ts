@@ -27,3 +27,8 @@ export type DatabaseConfig = {
   cert?: string;
   logging?: string[];
 };
+
+export type AllConfigType = {
+  app: AppConfig;
+  database: DatabaseConfig;
+};
