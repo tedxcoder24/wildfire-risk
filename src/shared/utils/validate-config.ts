@@ -8,7 +8,7 @@ function validateConfig<T extends object>(
   const validatedConfig = plainToClass(envVariablesClass, config, {
     enableImplicitConversion: true
   });
-  const errors = validateSync(validateConfig, {
+  const errors = validateSync(validatedConfig, {
     skipMissingProperties: false
   });
 
