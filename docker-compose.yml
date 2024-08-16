@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres
+    environment:
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend
+
+  app:
+    build: .
+    container_name: nestjs-app
+    environment:
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_NAME: ${DATABASE_NAME}
+      GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY}
+      NASA_API_KEY: ${NASA_API_KEY}
+      NASA_RADIUS: ${NASA_RADIUS}
+      NASA_DATE_RANGE: ${NASA_DATE_RANGE}
+    ports:
+      - '3000:3000'
+    depends_on:
+      - postgres
+    networks:
+      - backend
+
+networks:
+  backend:
+
+volumes:
+  postgres_data:

@@ -1,73 +1,96 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Address-based Wildfire Risk API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Overview
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+This project is a backend application built with NestJS and TypeScript. It processes user-submitted addresses, retrieves geocoding data (latitude and longitude), checks for nearby wildfires using NASA's FIRMS API, and stores the results in a PostgreSQL database. The application provides several API endpoints to submit addresses, retrieve all stored addresses, and get detailed information for a specific address.
 
-## Description
+## Features
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- **Address Submission Endpoint**: Submit an address, retrieve geolocation data, check for wildfire risks, and save the information to the database.
+- **Address Listing Endpoint**: Retrieve a list of all submitted addresses with their respective geolocation data.
+- **Address Detail Endpoint**: Get detailed information for a specific address, including wildfire data.
 
-## Installation
+## Technical Stack
+
+- **Framework**: [NestJS](https://nestjs.com/)
+- **Language**: TypeScript
+- **Database**: PostgreSQL
+- **ORM**: Sequelize (with `sequelize-typescript`)
+- **Geocoding API**: Google Maps Geocoding API
+- **Wildfire Data API**: NASA's FIRMS API
+- **Containerization**: Docker
+
+## Installation and Setup
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) (v14.x or later)
+- [Docker](https://www.docker.com/)
+- [Docker Compose](https://docs.docker.com/compose/)
+- Google Maps Geocoding API key
+- NASA FIRMS API key
+
+### Steps
+
+1. **Clone the repository:**
+
+   ```bash
+   git clone https://github.com/your-username/wildfire-risk-api.git
+   cd wildfire-risk-api
+
+   ```
+
+2. **Install dependencies:**
+
+   ```bash
+   Copy code
+   npm install
+
+   ```
+
+3. **Set up environment variables:**
+
+   Create a .env file in the root directory and populate it with your API keys and database credentials:
+
+   ```bash
+   GOOGLE_MAPS_API_KEY=your_google_maps_api_key
+   NASA_API_KEY=your_nasa_firms_api_key
+   DATABASE_HOST=localhost
+   DATABASE_PORT=5432
+   DATABASE_USER=your_db_username
+   DATABASE_PASSWORD=your_db_password
+   DATABASE_NAME=wildfire_risk_db
+
+   ```
+
+4. **Run the application using Docker Compose:**
+
+   This will spin up the PostgreSQL database and the NestJS application in containers.
+
+   ```bash
+   docker-compose up
+   ```
+
+### Database
+
+#### Migration
+
+This project uses PostgreSQL to store address and wildfire data. The database schema is managed using Sequelize ORM.
 
 ```bash
-$ npm install
+npm run db:migrate
 ```
 
-## Running the app
+#### Seeding
+
+(Optional) Seed the database with initial data:
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm run db:seed
 ```
 
-## Test
+### Additional Notes:
 
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+- Replace placeholder values like `your_google_maps_api_key` and `your_nasa_firms_api_key` with actual API keys.
+- Update the repository URL and other details as needed based on your project setup.
+- Include database migration and seed commands if applicable.
