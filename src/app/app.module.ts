@@ -1,15 +1,17 @@
 import { Module } from '@nestjs/common';
-import { HttpModule } from '@nestjs/axios';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import databaseConfig from 'src/config/database.config';
-import appConfig from 'src/config/app.config';
+import { HttpModule } from '@nestjs/axios';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TypeOrmConfigService } from 'src/database/typeorm-config.service';
-import { DataSource, DataSourceOptions } from 'typeorm';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CacheModule } from '@nestjs/cache-manager';
+import { DataSource, DataSourceOptions } from 'typeorm';
+
+import appConfig from 'src/config/app.config';
+import databaseConfig from 'src/config/database.config';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { TypeOrmConfigService } from 'src/database/typeorm-config.service';
+import { AddressModule } from './address/address.module';
 
 @Module({
   imports: [
@@ -26,7 +28,8 @@ import { CacheModule } from '@nestjs/cache-manager';
       }
     }),
     ScheduleModule.forRoot(),
-    CacheModule.register({ isGlobal: true })
+    CacheModule.register({ isGlobal: true }),
+    AddressModule
   ],
   controllers: [AppController],
   providers: [AppService]
