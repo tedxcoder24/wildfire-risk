@@ -6,12 +6,14 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Query,
   Res
 } from '@nestjs/common';
 import { AddressService } from './address.service';
 import { Response } from 'express';
 import { buildSuccessResponse } from 'src/shared/utils/functions/general-responses';
 import { CreateAddressDto } from './dto/create-address.dto';
+import { paginationDto } from './dto/pagination.dto';
 
 @Controller('addresses')
 export class AddressController {
@@ -28,10 +30,13 @@ export class AddressController {
   }
 
   @Get()
-  async getAddresses(@Res() response: Response): Promise<void> {
-    const [addresses, count] = await this.addressService.getAll();
+  async getAddresses(
+    @Res() response: Response,
+    @Query() paginationDto: paginationDto
+  ): Promise<void> {
+    const [addresses, total] = await this.addressService.getAll(paginationDto);
 
-    response.status(HttpStatus.OK).send(buildSuccessResponse(addresses, count));
+    response.status(HttpStatus.OK).send(buildSuccessResponse(addresses, total));
   }
 
   @Get(':id')
