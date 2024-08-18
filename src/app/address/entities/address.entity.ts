@@ -10,12 +10,12 @@ export class Address {
   @Column()
   address: string;
 
-  @Column()
+  @Column('float')
   latitude: number;
 
-  @Column()
+  @Column('float')
   longitude: number;
 
-  @Column('json', { nullable: true })
+  @Column('jsonb', { nullable: true })
   wildfireData: any;
 }
