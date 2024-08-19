@@ -38,7 +38,7 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup(`${process.env.API_PREFIX}/docs`, app, document);
+  SwaggerModule.setup(`docs`, app, document);
 
   if (process.argv.includes('--generateSwagger')) {
     writeFileSync(

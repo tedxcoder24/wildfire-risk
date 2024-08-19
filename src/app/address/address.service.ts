@@ -8,6 +8,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import { Repository } from 'typeorm';
 import { default as axios, AxiosResponse } from 'axios';
 import { Cache } from 'cache-manager';
@@ -136,5 +137,38 @@ export class AddressService {
     }
 
     return address;
+  }
+
+  async updateWildfireDataForAllAddresses(): Promise<void> {
+    const addresses = await this.addressRepository.find();
+    const nasaApiKey = this.configService.get<string>('NASA_API_KEY');
+    const nasaRadius = this.configService.get<number>('NASA_RADIUS');
+    const nasaDateRange = this.configService.get<number>('NASA_DATE_RANGE');
+
+    for (const address of addresses) {
+      try {
+        const area = `${address.longitude - nasaRadius},${address.latitude - nasaRadius},${address.longitude + nasaRadius},${address.latitude + nasaRadius}`;
+        const wildfireUrl = `https://firms.modaps.eosdis.nasa.gov/api/area/csv/${nasaApiKey}/VIIRS_SNPP_NRT/${area}/${nasaDateRange}/${getDate()}`;
+        const wildfireResponse: AxiosResponse<string> = await axios.get(
+          wildfireUrl,
+          { timeout: 5000 }
+        );
+        const wildfireData = await parseCsv(wildfireResponse.data);
+
+        address.wildfireData = wildfireData;
+        await this.addressRepository.save(address);
+      } catch (error) {
+        this.logger.error(
+          `Error updating wildfire data for address ${address.id}: ${error.message}`,
+          error.stack
+        );
+      }
+    }
+  }
+
+  @Cron(CronExpression.EVERY_HOUR)
+  async handleCron() {
+    this.logger.debug('Running scheduled task to update wildfire data');
+    await this.updateWildfireDataForAllAddresses();
   }
 }
